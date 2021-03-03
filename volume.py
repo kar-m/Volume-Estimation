@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.decomposition import PCA
-import area
-
+from area import area
 
 def volume(x, y, z, projection, n_layers=12, n_points=20):
     # find the principal component (use sklearn PCA)
@@ -33,11 +32,12 @@ def volume(x, y, z, projection, n_layers=12, n_points=20):
         if projection == 'layers':
             return points[distances < threshold], threshold
         elif projection == 'points':
-            mask = np.argmin(distances)[:n_points]
+            mask = np.argsort(distances)
+            mask = mask[:n_points]
             return points[mask], np.max(distances[mask])
 
     def project_points(points, direction, b1, b2):
-        v = points - direction * np.reshape(points @ direction, newshape=(1, -1)).T / np.linalg.norm(direction) ** 2
+        v = points
         x = (v @ b1) / np.linalg.norm(b1) ** 2
         y = (v @ b2) / np.linalg.norm(b2) ** 2
         return x, y
@@ -45,11 +45,18 @@ def volume(x, y, z, projection, n_layers=12, n_points=20):
     volume = 0
     s = 0
     c = np.dot(first, dir)
-    for i in range(n_layers):
+    if projection=='layers': loop_length = n_layers
+    elif projection=='points': loop_length = int(len(x)/n_points)
+    for i in range(loop_length):
         points, step = points_near_plane(A, dir, c, width)
         x, y = project_points(points, dir, a, b)
+        #plt.scatter(x, y)
+        #plt.show()
+        if i == int(loop_length//2):
+          plt.scatter(x, y)
+          plt.show()
         if len(x) > 3:
-            s = area.area(x, y)
-        volume += s * width
+            s = area(x, y)
+        volume += s * step
         c -= step
     return volume
