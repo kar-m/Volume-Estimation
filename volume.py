@@ -1,10 +1,12 @@
 import numpy as np
 from sklearn.decomposition import PCA
-from area import area
 
 def volume(x, y, z, projection, n_layers=12, n_points=20):
     # find the principal component (use sklearn PCA)
-    A = np.concatenate((x, y, z))
+    x = x.reshape(-1, 1)
+    y = y.reshape(-1, 1)
+    z = z.reshape(-1, 1)
+    A = np.concatenate((x, y, z), axis=1)
     A = A.reshape((-1, 3))
     pca = PCA(3)
     pca.fit(A)
@@ -53,6 +55,7 @@ def volume(x, y, z, projection, n_layers=12, n_points=20):
         #plt.scatter(x, y)
         #plt.show()
         if i == int(loop_length//2):
+          plt.figure(figsize=(5, 5))
           plt.scatter(x, y)
           plt.show()
         if len(x) > 3:
