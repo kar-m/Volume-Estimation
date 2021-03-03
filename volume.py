@@ -55,9 +55,10 @@ def volume(x, y, z, projection, n_layers=12, n_points=20):
         #plt.scatter(x, y)
         #plt.show()
         if i == int(loop_length//2):
-          plt.figure(figsize=(5, 5))
-          plt.scatter(x, y)
-          plt.show()
+            pass
+            #plt.figure(figsize=(5, 5))
+            #plt.scatter(x, y)
+            #plt.show()
         if len(x) > 3:
             s = area(x, y)
         volume += s * step
